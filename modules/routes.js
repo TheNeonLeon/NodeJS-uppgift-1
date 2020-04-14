@@ -18,20 +18,20 @@ module.exports = (app, db) => {
         const korg = db.get('varukorg').value();
         const fail = "";
         const found = db.get('product').find(function(id){
+            if (db.found(req.body.id)){
+
+                return found;
+        
+               }else if (!found){
+                   return fail;
+               }
             return id;
 
             
         });
         const addProduct = db.get('varukorg').push(found).write();
 
-       if (typeof found == "string" ){
-
-        return found;
-
-       }else if (!found){
-           return fail;
-       }
-       
+       res.send('Products added');
     });
 
 app.post('/varukorg', (req, res) =>{
@@ -55,16 +55,12 @@ app.post('/varukorg', (req, res) =>{
     
 });
 
-
-       
 //Getting all products from cart
     app.get('/varukorg', (req, res) => {
         res.json(db.get('varukorg')
         .value());          
         });
         
-
-     
      //Delete product from cart
         app.delete('/varukorg', (req, res) =>{
           const found = db.get('varukorg').find(function(id){
@@ -76,17 +72,6 @@ app.post('/varukorg', (req, res) =>{
         res.send('DELETED')
 
         });
-
-        app.delete('/varukorg', (req, res) =>{
-            const varor = db.get('varukorg').value();
-            const found = db.get('varukorg').find(function(id){
-              return (id);
-
-          });
-          if (db.varukorg){
-
-          }
-});
 }
  /*app.get('/varukorg/:id', (req, res) => {
             const id = req.params.id;
