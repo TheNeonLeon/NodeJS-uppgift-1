@@ -2,8 +2,6 @@ const db = require('../server');
 const uuid4 = require('uuid4');
 const bodyParser = require('body-parser');
 
-
-
 module.exports = (app, db) => {
     var id = uuid4();
     var productList = ({ id: id, name: "clock", price: "500 $", URL: "https://placeimg.com/640/480/tech"});
@@ -26,7 +24,6 @@ module.exports = (app, db) => {
                    return fail;
                }
             return id;
-
             
         });
         const addProduct = db.get('varukorg').push(found).write();
@@ -51,7 +48,6 @@ app.post('/varukorg', (req, res) =>{
         res.send('Du kan inte lägga till en produkt some inte finns');
         
     }
-    
     
 });
 
