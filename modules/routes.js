@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 module.exports = (app, db) => {
     var id = uuid4();
     var productList = ({ id: id, name: "clock", price: "500 $", URL: "https://placeimg.com/640/480/tech"});
-    
+    checkProd = productId => db.get('product').find({id: productId}).value()
 
 //Get all products
     app.get('/product', (req, res) =>{
@@ -16,21 +16,17 @@ module.exports = (app, db) => {
         const korg = db.get('varukorg').value();
         const fail = "";
         const found = db.get('product').find(function(id){
-            if (db.found(req.body.id)){
-
-                return found;
+            if (db.checkProd(req.body.id)){
+                res.send('Product added');
+                return 
         
                }else if (!found){
                    return fail;
-               }
-            return id;
-            
+               }            
         });
         const addProduct = db.get('varukorg').push(found).write();
 
-       res.send('Products added');
     });
-
 app.post('/varukorg', (req, res) =>{
     const korg = db.get('varukorg').value();
     const addProduct = db.get('varukorg').push(found).write();
