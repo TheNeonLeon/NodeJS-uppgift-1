@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 module.exports = (app, db) => {
     var id = uuid4();
     var productList = ({ id: id, name: "clock", price: "500 $", URL: "https://placeimg.com/640/480/tech"});
-    checkProd = productId => db.get('product').find({id: productId}).value()
+    checkProd = id => db.get('product').find({id: id}).value()
 
 //Get all products
     app.get('/product', (req, res) =>{
@@ -14,17 +14,13 @@ module.exports = (app, db) => {
 //Adding new product to cart
     app.post('/product/add', (req, res) =>{
         const korg = db.get('varukorg').value();
+        const product = db.get('product').value();
         const fail = "";
-        const found = db.get('product').find(function(id){
-            if (db.checkProd(req.body.id)){
-                res.send('Product added');
-                return 
-        
-               }else if (!found){
-                   return fail;
-               }            
+        const found = db.get('product').find(function(id){    
+            return id;       
         });
-        const addProduct = db.get('varukorg').push(found).write();
+       db.get('varukorg').push(product).write();
+       res.send('produkten tillagd i varukorg')
 
     });
 app.post('/varukorg', (req, res) =>{
@@ -34,7 +30,7 @@ app.post('/varukorg', (req, res) =>{
     const found = db.get('varukorg').find(function(id){
         return id;
     });
-    if (typeof addProduct == "string"){
+    if (typeof addProduct == Object){
 
         res.send('Du kan ej lägga till samma produkt'); 
           
