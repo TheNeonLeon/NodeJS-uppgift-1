@@ -11,40 +11,15 @@ module.exports = (app, db) => {
     app.get('/product', (req, res) =>{
         res.json(db);
     });
-//Adding new product to cart
-    app.post('/product/add', (req, res) =>{
-        const korg = db.get('varukorg').value();
-        const fail = "";
-        const found = db.get('product').find(function(id){
-            if (db.checkProd(req.body.id)){
-                res.send('Product added');
-                return 
-        
-               }else if (!found){
-                   return fail;
-               }            
-        });
-        const addProduct = db.get('varukorg').push(found).write();
 
-    });
+//Add product to cart
 app.post('/varukorg', (req, res) =>{
     const korg = db.get('varukorg').value();
-    const addProduct = db.get('varukorg').push(found).write();
-
     const found = db.get('varukorg').find(function(id){
         return id;
     });
-    if (typeof addProduct == "string"){
-
-        res.send('Du kan ej lägga till samma produkt'); 
-          
-    }
-    if (!found){
-        db.get('produkt').push(addProduct);
-        res.send('Du kan inte lägga till en produkt some inte finns');
-        
-    }
-    
+    const addProduct = db.get('varukorg').push(found).write();
+    res.send('added');    
 });
 
 //Getting all products from cart
@@ -65,6 +40,9 @@ app.post('/varukorg', (req, res) =>{
 
         });
 }
+
+
+
  /*app.get('/varukorg/:id', (req, res) => {
             const id = req.params.id;
             
