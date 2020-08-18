@@ -5,10 +5,11 @@ const { empty } = require('uuidv4');
 module.exports = (app, db) => {
     var id = uuid4();
     var productList = ({ id: id, name: "clock", price: "500 $", URL: "https://placeimg.com/640/480/tech"});
-
+    const found = (id) => db.get('varukorg').find({id:id}).value();
 //Get all products
-    app.get('/product', (req, res) =>{
+    app.get('/product', (req, res, next) =>{
         res.json(db);
+        next();
     });
 
      /* function checkCart(){
@@ -21,9 +22,6 @@ module.exports = (app, db) => {
   }
   checkCart(); */
 //Add product to cart
-const found = () => db.get('varukorg').find(function(id){
-    return id;
-});
 app.post('/varukorg', (req, res, next) =>{
     const korg = db.get('varukorg').value();
 
@@ -37,15 +35,14 @@ app.post('/varukorg', (req, res, next) =>{
         message: 'Product added to cart'
     }
     function checkCart() {
-        if(found == undefined) {
-            res.send(error);
-            return;
-        }else{
+        if(found != undefined) {
             db.get('varukorg').push(productList).write();
             res.send(success);
-            return;
+        }else{
+            res.send(error);
         }
-        next()
+        next();
+        return
     }
     checkCart();
 });
@@ -69,9 +66,9 @@ app.post('/varukorg', (req, res, next) =>{
             res.send('DELETED')
             return;
         }
+        next();
     }
     checkDeleted();
-
     });
 }
 

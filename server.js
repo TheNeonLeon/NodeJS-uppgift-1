@@ -2,7 +2,6 @@ const express = require('express');
 const app = express();
 const low = require('lowdb');
 const bodyParser = require('body-parser');
-const uuid4 = require('uuid4');
 const FileSync = require('lowdb/adapters/FileSync');
 const adapter = new FileSync('db.json');
 const db = low(adapter);
