@@ -1,6 +1,5 @@
 const db = require('../server');
 const uuid4 = require('uuid4');
-const { empty } = require('uuidv4');
 
 module.exports = (app, db) => {
     var id = uuid4();
@@ -12,20 +11,10 @@ module.exports = (app, db) => {
         next();
     });
 
-     /* function checkCart(){
-      if(JSON.stringify(Object.keys(korg)).length === 0){
-        db.get('varukorg').push(found).write();
-        res.send('added');
-    }else{
-        res.send('You cannot add the same product');
-    }
-  }
-  checkCart(); */
 //Add product to cart
 app.post('/varukorg', (req, res, next) =>{
     const korg = db.get('varukorg').value();
 
-    let prodSend = req.query;
     let error = {
         status: 'Error',
         message: 'Your product is already in the cart'
@@ -35,7 +24,7 @@ app.post('/varukorg', (req, res, next) =>{
         message: 'Product added to cart'
     }
     function checkCart() {
-        if(found != undefined) {
+        if(!Array.isArray(korg) || !korg.length) {
             db.get('varukorg').push(productList).write();
             res.send(success);
         }else{
@@ -63,25 +52,10 @@ app.post('/varukorg', (req, res, next) =>{
         }
         else{
             db.get('varukorg').pop(found).write();
-            res.send('DELETED')
+            res.send('Product deleted')
             return;
         }
-        next();
     }
     checkDeleted();
     });
 }
-
-
-
- /*app.get('/varukorg/:id', (req, res) => {
-            const id = req.params.id;
-            
-            for (let varukorg of db) {
-                if (varukorg.id === id){
-                    res.json(varukorg);
-                    return;
-                }
-            }
-           res.status(404).send('Product not found');
-        });*/
