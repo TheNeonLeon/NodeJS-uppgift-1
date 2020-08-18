@@ -1,5 +1,6 @@
 const db = require('../server');
 const uuid4 = require('uuid4');
+const { empty } = require('uuidv4');
 
 module.exports = (app, db) => {
     var id = uuid4();
@@ -38,12 +39,13 @@ app.post('/varukorg', (req, res, next) =>{
     function checkCart() {
         if(found == undefined) {
             res.send(error);
+            return;
         }else{
             db.get('varukorg').push(productList).write();
             res.send(success);
+            return;
         }
         next()
-        return
     }
     checkCart();
 });
@@ -56,17 +58,16 @@ app.post('/varukorg', (req, res, next) =>{
         
 //Delete product from cart
     app.delete('/varukorg', (req, res) =>{
-    const found = db.get('varukorg').find(function(id){
-        return (id);
-    });
-       
+       let korg = db.get('varukorg').value();
     function checkDeleted() {
-        if(!found){
+        if(!Array.isArray(korg) || !korg.length){
             res.send('You cannot delete a product that does not exist');
+            return;
         }
         else{
             db.get('varukorg').pop(found).write();
             res.send('DELETED')
+            return;
         }
     }
     checkDeleted();

@@ -7,18 +7,5 @@
       "URL": "https://placeimg.com/640/480/tech"
     }
   ],
-  "varukorg": [
-    {
-      "id": "9b96dfc4-d745-4aaa-b30a-a2deef640fe5",
-      "name": "clock",
-      "price": "500 $",
-      "URL": "https://placeimg.com/640/480/tech"
-    },
-    {
-      "id": "9b96dfc4-d745-4aaa-b30a-a2deef640fe5",
-      "name": "clock",
-      "price": "500 $",
-      "URL": "https://placeimg.com/640/480/tech"
-    }
-  ]
+  "varukorg": []
 }
