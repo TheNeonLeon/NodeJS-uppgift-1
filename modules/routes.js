@@ -3,8 +3,29 @@ const uuid4 = require('uuid4');
 
 module.exports = (app, db) => {
     var id = uuid4();
-    var productList = ({ id: id, name: "clock", price: "500 $", URL: "https://placeimg.com/640/480/tech"});
-    const found = (id) => db.get('varukorg').find({id:id}).value();
+    var productList = (
+    { 
+        id: id, 
+        name: "clock", 
+        price: "500 $", 
+        URL: "https://placeimg.com/640/480/tech"
+    },
+    {
+        id: id, 
+        name: "tie", 
+        price: "200 $", 
+        URL: "https://placeimg.com/640/480/tech"
+    },
+
+    {
+        id: id, 
+        name: "shoe", 
+        price: "50 $", 
+        URL: "https://placeimg.com/640/480/tech"
+    }
+    
+);
+    const found = (id) => db.get('product').find({id}).value();
 //Get all products
     app.get('/product', (req, res, next) =>{
         res.json(db);
@@ -14,7 +35,7 @@ module.exports = (app, db) => {
 //Add product to cart
 app.post('/varukorg', (req, res, next) =>{
     const korg = db.get('varukorg').value();
-
+    const products = db.get('product').value();
     let error = {
         status: 'Error',
         message: 'Your product is already in the cart'
@@ -25,7 +46,7 @@ app.post('/varukorg', (req, res, next) =>{
     }
     function checkCart() {
         if(!Array.isArray(korg) || !korg.length) {
-            db.get('varukorg').push(productList).write();
+            db.get('varukorg').push(products).write();
             res.send(success);
         }else{
             res.send(error);
