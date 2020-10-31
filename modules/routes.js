@@ -1,46 +1,60 @@
 const db = require('../server');
 const uuid4 = require('uuid4');
-const bodyParser = require('body-parser');
 
 module.exports = (app, db) => {
     var id = uuid4();
-    var productList = ({ id: id, name: "clock", price: "500 $", URL: "https://placeimg.com/640/480/tech"});
-    checkProd = id => db.get('product').find({id: id}).value()
+    var productList = (
+    { 
+        id: id, 
+        name: "clock", 
+        price: "500 $", 
+        URL: "https://placeimg.com/640/480/tech"
+    },
+    {
+        id: id, 
+        name: "tie", 
+        price: "200 $", 
+        URL: "https://placeimg.com/640/480/tech"
+    },
 
-//Get all products
-    app.get('/product', (req, res) =>{
-        res.json(db);
-    });
-//Adding new product to cart
-    app.post('/product/add', (req, res) =>{
-        const korg = db.get('varukorg').value();
-        const product = db.get('product').value();
-        const fail = "";
-        const found = db.get('product').find(function(id){    
-            return id;       
-        });
-       db.get('varukorg').push(product).write();
-       res.send('produkten tillagd i varukorg')
-
-    });
-app.post('/varukorg', (req, res) =>{
-    const korg = db.get('varukorg').value();
-    const addProduct = db.get('varukorg').push(found).write();
-
-    const found = db.get('varukorg').find(function(id){
-        return id;
-    });
-    if (typeof addProduct == Object){
-
-        res.send('Du kan ej lägga till samma produkt'); 
-          
-    }
-    if (!found){
-        db.get('produkt').push(addProduct);
-        res.send('Du kan inte lägga till en produkt some inte finns');
-        
+    {
+        id: id, 
+        name: "shoe", 
+        price: "50 $", 
+        URL: "https://placeimg.com/640/480/tech"
     }
     
+);
+    const found = (id) => db.get('product').find({id}).value();
+//Get all products
+    app.get('/product', (req, res, next) =>{
+        res.json(db);
+        next();
+    });
+
+//Add product to cart
+app.post('/varukorg', (req, res, next) =>{
+    const korg = db.get('varukorg').value();
+    const products = db.get('product').value();
+    let error = {
+        status: 'Error',
+        message: 'Your product is already in the cart'
+    }
+    let success = {
+        status: 'Success',
+        message: 'Product added to cart'
+    }
+    function checkCart() {
+        if(!Array.isArray(korg) || !korg.length) {
+            db.get('varukorg').push(products).write();
+            res.send(success);
+        }else{
+            res.send(error);
+        }
+        next();
+        return
+    }
+    checkCart();
 });
 
 //Getting all products from cart
@@ -49,26 +63,20 @@ app.post('/varukorg', (req, res) =>{
         .value());          
         });
         
-     //Delete product from cart
-        app.delete('/varukorg', (req, res) =>{
-          const found = db.get('varukorg').find(function(id){
-            return (id);
-        });
-        
-        db.get('varukorg').pop(found).write();
-
-        res.send('DELETED')
-
-        });
+//Delete product from cart
+    app.delete('/varukorg', (req, res) =>{
+       let korg = db.get('varukorg').value();
+    function checkDeleted() {
+        if(!Array.isArray(korg) || !korg.length){
+            res.send('You cannot delete a product that does not exist');
+            return;
+        }
+        else{
+            db.get('varukorg').pop(found).write();
+            res.send('Product deleted')
+            return;
+        }
+    }
+    checkDeleted();
+    });
 }
- /*app.get('/varukorg/:id', (req, res) => {
-            const id = req.params.id;
-            
-            for (let varukorg of db) {
-                if (varukorg.id === id){
-                    res.json(varukorg);
-                    return;
-                }
-            }
-           res.status(404).send('Product not found');
-        });*/
