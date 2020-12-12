@@ -25,10 +25,24 @@ module.exports = (app, db) => {
     }
     
 );
-    const found = (id) => db.get('product').find({id}).value();
+    const found = (id) => db.get('product').find(x => x.id).value();
 //Get all products
-    app.get('/product', (req, res, next) =>{
+    app.get('/product/all', (req, res, next) =>{
         res.json(db);
+        next();
+    });
+
+    app.get('/', (req, res, next) =>{
+        res.json(db.get('product')
+        .value());
+        
+        next();
+    });
+
+    app.get('/product', (req, res, next) =>{
+        res.json(db.get('product')
+        .value());
+        
         next();
     });
 

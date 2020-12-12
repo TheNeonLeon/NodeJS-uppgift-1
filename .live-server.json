@@ -1,0 +1,7 @@
+{"port": 8000, 
+    "host": "0.0.0.0", 
+    "open": false, 
+    "root":"/OneDrive/Skrivbord/NodeJS-uppgift",
+    "ignore": "",
+    "file": "index.html",
+    "wait": 1000 }
