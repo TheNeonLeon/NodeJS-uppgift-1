@@ -1,96 +1,100 @@
 const db = require('../server');
 const uuid4 = require('uuid4');
-
 module.exports = (app, db) => {
-    var id = uuid4();
-    var productList = (
-    { 
-        id: id, 
-        name: "clock", 
-        price: "500 $", 
-        URL: "https://placeimg.com/640/480/tech"
-    },
-    {
-        id: id, 
-        name: "tie", 
-        price: "200 $", 
-        URL: "https://placeimg.com/640/480/tech"
-    },
 
-    {
-        id: id, 
-        name: "shoe", 
-        price: "50 $", 
-        URL: "https://placeimg.com/640/480/tech"
-    }
-    
-);
-    const found = (id) => db.get('product').find(x => x.id).value();
-//Get all products
-    app.get('/product/all', (req, res, next) =>{
-        res.json(db);
-        next();
-    });
+//add new Products
+const addItem = async (id, name, price, img) => {
+    const data = await db.get("product").push({ id, name, price, img }).write();
+    return data;
+  };
+  
 
-    app.get('/', (req, res, next) =>{
-        res.json(db.get('product')
-        .value());
-        
-        next();
-    });
+  //show all products
+  app.get("/product", (req, res) => {
+    res.json(db.get("product").value());
+  });
 
-    app.get('/product', (req, res, next) =>{
-        res.json(db.get('product')
-        .value());
-        
-        next();
-    });
-
-//Add product to cart
-app.post('/varukorg', (req, res, next) =>{
-    const korg = db.get('varukorg').value();
-    const products = db.get('product').value();
-    let error = {
-        status: 'Error',
-        message: 'Your product is already in the cart'
+  app.post("/product", async (req, res) => {
+    const { id, name, price, img } = req.query;
+    const data = await addItem(id, name, price, img);
+  });
+  
+  //add to cart
+  
+  const addToCart = async id => {
+    const checkCart = await db.get("varukorg").find({ id }).value();
+  
+    if (checkCart) {
+      let message = "";
+      return message;
+    } else {
+      let find = await db.get("product").find({ id }).value();
+    if (find) {
+        find = await db.get("varukorg").push(find) .write();
+        return find;
+      } else {
+        message = false;
+        return message;
+      }
     }
-    let success = {
-        status: 'Success',
-        message: 'Product added to cart'
+  };
+  //add product
+  app.post("/varukorg", async (req, res) => {
+    const { id } = req.query;
+    const find = await addToCart(id);
+    let message = {
+      success: true,
+      message: "Product added"
+    };
+  
+    if (typeof find == "string" || find instanceof String) {
+      message = {
+        success: false,
+        message: "product already in cart"
+      };
+    } else if (find === false) {
+      message = {
+        success: false,
+        message: "product does not exist"
+      };
+    }message.find = find[find.length - 1];
+    return res.send(message);
+  });
+  //get products from cart
+  app.get("/varukorg", (req, res) => {
+    res.json(db.get("varukorg").value());
+    return res;
+  });
+  
+  //delete Products from cart
+  
+  const deleteProduct = async id => {
+    const checkCart = await db.get("varukorg").find({ id }).value();
+  
+    if (checkCart) {
+      let res = await db.get("varukorg").remove({ id }).write();
+      return res;
+    } else {
+      res = "";
+      return res;
     }
-    function checkCart() {
-        if(!Array.isArray(korg) || !korg.length) {
-            db.get('varukorg').push(products).write();
-            res.send(success);
-        }else{
-            res.send(error);
-        }
-        next();
-        return
-    }
-    checkCart();
-});
-
-//Getting all products from cart
-    app.get('/varukorg', (req, res) => {
-        res.json(db.get('varukorg')
-        .value());          
-        });
-        
-//Delete product from cart
-    app.delete('/varukorg', (req, res) =>{
-       let korg = db.get('varukorg').value();
-    function checkDeleted() {
-        if(!Array.isArray(korg) || !korg.length){
-            res.send('You cannot delete a product that does not exist');
-            return;
-        }
-        else{
-            db.get('varukorg').pop(found).write();
-            res.send('Product deleted')
-            return;
-        }
-    }
-    checkDeleted();
-    });
+  };
+  
+  app.delete("/varukorg", async (req, res) => {
+    const { id } = req.query;
+    const find = await deleteProduct(id);
+  
+    if (typeof find === "string" || find instanceof String) {
+      message = {
+        success: false,
+        message: "product does not exist"
+      };
+    } else {
+      message = {
+        success: true,
+        message: "Product deleted"
+      };
+    }message.find = find[res.length - 1];
+    return res.send(message);
+  });
 }

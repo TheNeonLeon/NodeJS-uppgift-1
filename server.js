@@ -13,14 +13,24 @@ app.use(bodyParser.json());
 app.use(cors())
 
 
-app.listen(PORT, () => {console.log(`server started on port ${PORT}`)
-});
+
 
 //Setting defaults if JSON is empty
-
+const startDb = () => {
+  const product = db.has('product').value();
+  const cart = db.has('varukorg').value();
+  if(!product) {
   db.defaults({ product: [], varukorg: [] })
   .write();
+  }
+  if(!cart) {
+    db.defaults({ product: [], varukorg: [] })
+  }
+}
 
+app.listen(PORT, () => {console.log(`server started on port ${PORT}`);
+startDb();
+});
 
 routes(app, db);
 
