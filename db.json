@@ -21,22 +21,16 @@
   ],
   "varukorg": [
     {
-      "id": "1",
-      "Name": "clock",
-      "Price": "500 $",
-      "img": "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"
-    },
-    {
-      "id": "2",
-      "Name": "tie",
-      "Price": "200 $",
-      "img": "https://images.unsplash.com/photo-1591729652476-e7f587578d9c?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"
-    },
-    {
       "id": "3",
       "Name": "shoe",
       "Price": "150 $",
       "img": "https://images.unsplash.com/photo-1578116922645-3976907a7671?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=751&q=80"
+    },
+    {
+      "id": "1",
+      "Name": "clock",
+      "Price": "500 $",
+      "img": "https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=750&q=80"
     }
   ]
 }
